@@ -13,8 +13,4 @@ bun run dev
 Issues:
 
 queries.ts : db.user.findUnique();
-: 145| User;
-
-SAAS-Website-Builder\src\app\(main)\agency\page.tsxconst
-: user = await getAuthUserDetails();
-: const agencyId = await verifyAndAcceptInvitation();
+: 145| Users;
