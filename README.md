@@ -8,7 +8,7 @@ First, run the development server:
 bun run dev
 ```
 
-# Time-1:24:38
+# Time-1:55:38
 
 Issues:
 
