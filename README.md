@@ -9,3 +9,12 @@ bun run dev
 ```
 
 # Time-1:24:38
+
+Issues:
+
+queries.ts : db.user.findUnique();
+: 145| User;
+
+SAAS-Website-Builder\src\app\(main)\agency\page.tsxconst
+: user = await getAuthUserDetails();
+: const agencyId = await verifyAndAcceptInvitation();
