@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 const isPublicRoute = createRouteMatcher(["/site", "/api/uploadthing"]);
 
 export default clerkMiddleware(async (auth, req) => {
+  // rewrite for domains
   const url = req.nextUrl;
   const searchParams = url.searchParams.toString();
   const hostname = req.headers;
@@ -35,20 +36,21 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(new URL(`/agency/sign-in`, req.url));
   }
 
-  // Avoid rewriting /site to itself
+  // Rewriting to /site
   if (
     url.pathname === "/" ||
     (url.pathname === "/site" && url.host === process.env.NEXT_PUBLIC_DOMAIN)
   ) {
+    console.log("Rewriting '/' to '/site'");
     return NextResponse.rewrite(new URL("/site", req.url));
   }
 
-  // Rewrite /agency and /subaccount paths
+  // Rewrite /agency and /subaccount paths to absolute URLs
   if (
     url.pathname.startsWith("/agency") ||
     url.pathname.startsWith("/subaccount")
   ) {
-    return NextResponse.rewrite(new URL(`${pathWithSearchParams}`, req.url));
+    return NextResponse.rewrite(new URL(`/${pathWithSearchParams}`, req.url));
   }
 
   // Protect non-public routes
@@ -56,5 +58,5 @@ export default clerkMiddleware(async (auth, req) => {
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 };
