@@ -8,9 +8,11 @@ First, run the development server:
 bun run dev
 ```
 
-# Time-1:55:38
+# Time-3:04:38
 
 Issues:
 
 queries.ts : db.user.findUnique();
 : 145| Users;
+error Ankur
+2.27.20
