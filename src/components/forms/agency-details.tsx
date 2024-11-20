@@ -31,7 +31,7 @@ import { Switch } from "../ui/switch";
 import {
   deleteAgency,
   initUser,
-  saveActivityLogsNoification,
+  saveActivityLogsNotification,
   updateAgencyDetails,
   upsertAgency,
 } from "@/lib/queries";
@@ -51,6 +51,7 @@ import {
 type Props = {
   data?: Partial<Agency>;
 };
+
 const FormSchema = z.object({
   name: z.string().min(2, { message: "Agency name must be atleast 2 chars." }),
   companyEmail: z.string().min(1),
@@ -126,17 +127,18 @@ const AgencyDetails = ({ data }: Props) => {
           },
           body: JSON.stringify(bodyData),
         });
+
         const customerData: { customerId: string } =
           await customerResponse.json();
         custId = customerData.customerId;
       }
 
       newUserData = await initUser({ role: "AGENCY_OWNER" });
-      if (!data?.customerId && !custId) return;
+      if (!data?.customerId && !custId) return
 
       const response = await upsertAgency({
         id: data?.id ? data.id : v4(),
-        customerId: data?.customerId || custId || "",
+        customerId: data?.customerId || custId || '',
         address: values.address,
         agencyLogo: values.agencyLogo,
         city: values.city,
@@ -155,7 +157,9 @@ const AgencyDetails = ({ data }: Props) => {
       toast({
         title: "Created Agency",
       });
-      if (data?.id) return router.refresh();
+      if (data?.id) {
+        return router.refresh();
+      }
       if (response) {
         return router.refresh();
       }
@@ -168,6 +172,7 @@ const AgencyDetails = ({ data }: Props) => {
       });
     }
   };
+
   const handleDeleteAgency = async () => {
     if (!data?.id) return;
     setDeletingAgency(true);
@@ -196,8 +201,8 @@ const AgencyDetails = ({ data }: Props) => {
         <CardHeader>
           <CardTitle>Agency Information</CardTitle>
           <CardDescription>
-            Lets create an agency for your business.you can edit agency settings
-            later from the agency setting tab.
+            Lets create an agency for you business. You can edit agency settings
+            later from the agency settings tab.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -212,7 +217,7 @@ const AgencyDetails = ({ data }: Props) => {
                 name="agencyLogo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Agency logo</FormLabel>
+                    <FormLabel>Agency Logo</FormLabel>
                     <FormControl>
                       <FileUpload
                         apiEndpoint="agencyLogo"
@@ -231,43 +236,55 @@ const AgencyDetails = ({ data }: Props) => {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>agency name</FormLabel>
+                      <FormLabel>Agency Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="your agency name" {...field} />
+                        <Input
+                          placeholder="Your agency name"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
-                  disabled={isLoading}
                   control={form.control}
-                  name="state"
+                  name="companyEmail"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>companyPhone</FormLabel>
+                      <FormLabel>Agency Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="State" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  disabled={isLoading}
-                  control={form.control}
-                  name="zipCode"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>country</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Zipcode" {...field} />
+                        <Input
+                          readOnly
+                          placeholder="Email"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+              <div className="flex md:flex-row gap-4">
+                <FormField
+                  disabled={isLoading}
+                  control={form.control}
+                  name="companyPhone"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Agency Phone Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Phone"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <FormField
                 disabled={isLoading}
                 control={form.control}
@@ -291,7 +308,7 @@ const AgencyDetails = ({ data }: Props) => {
                         />
                       </FormControl>
                     </FormItem>
-                  );
+                  )
                 }}
               />
               <FormField
@@ -302,7 +319,10 @@ const AgencyDetails = ({ data }: Props) => {
                   <FormItem className="flex-1">
                     <FormLabel>Address</FormLabel>
                     <FormControl>
-                      <Input placeholder="123 st..." {...field} />
+                      <Input
+                        placeholder="123 st..."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -317,7 +337,10 @@ const AgencyDetails = ({ data }: Props) => {
                     <FormItem className="flex-1">
                       <FormLabel>City</FormLabel>
                       <FormControl>
-                        <Input placeholder="City" {...field} />
+                        <Input
+                          placeholder="City"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -331,7 +354,10 @@ const AgencyDetails = ({ data }: Props) => {
                     <FormItem className="flex-1">
                       <FormLabel>State</FormLabel>
                       <FormControl>
-                        <Input placeholder="State" {...field} />
+                        <Input
+                          placeholder="State"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -345,7 +371,10 @@ const AgencyDetails = ({ data }: Props) => {
                     <FormItem className="flex-1">
                       <FormLabel>Zipcpde</FormLabel>
                       <FormControl>
-                        <Input placeholder="Zipcode" {...field} />
+                        <Input
+                          placeholder="Zipcode"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -360,7 +389,10 @@ const AgencyDetails = ({ data }: Props) => {
                   <FormItem className="flex-1">
                     <FormLabel>Country</FormLabel>
                     <FormControl>
-                      <Input placeholder="Country" {...field} />
+                      <Input
+                        placeholder="Country"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -375,15 +407,15 @@ const AgencyDetails = ({ data }: Props) => {
                   </FormDescription>
                   <NumberInput
                     defaultValue={data?.goal}
-                    onValueChange={async (val: any) => {
-                      if (!data?.id) return;
-                      await updateAgencyDetails(data.id, { goal: val });
-                      await saveActivityLogsNoification({
+                    onValueChange={async (val) => {
+                      if (!data?.id) return
+                      await updateAgencyDetails(data.id, { goal: val })
+                      await saveActivityLogsNotification({
                         agencyId: data.id,
                         description: `Updated the agency goal to | ${val} Sub Account`,
                         subaccountId: undefined,
-                      });
-                      router.refresh();
+                      })
+                      router.refresh()
                     }}
                     min={1}
                     className="bg-background !border !border-input"
@@ -391,11 +423,15 @@ const AgencyDetails = ({ data }: Props) => {
                   />
                 </div>
               )}
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? <Loading /> : "Save Agency Information"}
+              <Button
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? <Loading /> : 'Save Agency Information'}
               </Button>
             </form>
           </Form>
+
           {data?.id && (
             <div className="flex flex-row items-center justify-between rounded-lg border border-destructive gap-4 p-4 mt-4">
               <div>
@@ -406,12 +442,11 @@ const AgencyDetails = ({ data }: Props) => {
                 sub accounts and all data related to your sub accounts. Sub
                 accounts will no longer have access to funnels, contacts etc.
               </div>
-
               <AlertDialogTrigger
                 disabled={isLoading || deletingAgency}
                 className="text-red-600 p-2 text-center mt-2 rounded-md hove:bg-red-600 hover:text-white whitespace-nowrap"
               >
-                {deletingAgency ? "Deleting..." : "Delete Agency"}
+                {deletingAgency ? 'Deleting...' : 'Delete Agency'}
               </AlertDialogTrigger>
             </div>
           )}
@@ -439,6 +474,7 @@ const AgencyDetails = ({ data }: Props) => {
         </CardContent>
       </Card>
     </AlertDialog>
-  );
-};
+  )
+}
+
 export default AgencyDetails;
