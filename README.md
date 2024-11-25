@@ -4,7 +4,7 @@ Plura is a comprehensive SaaS platform designed for agencies to manage their cli
 
 ## App Link :- https://saas-website-builder.vercel.app/
 
-![Plura Logo](public/assests/plura-logo.svg)
+![Plura Logo](public/assests/preview.png)
 
 ## 🚀 Technologies Used
 
