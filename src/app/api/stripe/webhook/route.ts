@@ -76,9 +76,9 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(
     {
       webhookActionReceived: true,
-    }, 
+    },
     {
       status: 200,
     }
   )
-} 
+}

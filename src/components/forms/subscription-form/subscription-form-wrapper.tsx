@@ -12,7 +12,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Elements } from '@stripe/react-stripe-js'
 import { getStripe } from '@/lib/stripe/stripe-client'
 import Loading from '@/components/global/loading'
-import SubscriptionForm from './index'
+import SubscriptionForm from '.'
 
 type Props = {
   customerId: string

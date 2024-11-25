@@ -1,43 +1,13 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { Agency } from "@prisma/client";
-import { useToast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
-import { NumberInput } from "@tremor/react";
-import { v4 } from "uuid";
-import { AlertDialog } from "@radix-ui/react-alert-dialog";
+'use client'
+import { Agency } from '@prisma/client'
+import { useForm } from 'react-hook-form'
+import React, { useEffect, useState } from 'react'
+import { NumberInput } from '@tremor/react'
+import { v4 } from 'uuid'
+
+import { useRouter } from 'next/navigation'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import FileUpload from "../global/file-upload";
-import { Input } from "../ui/input";
-import { Switch } from "../ui/switch";
-import {
-  deleteAgency,
-  initUser,
-  saveActivityLogsNotification,
-  updateAgencyDetails,
-  upsertAgency,
-} from "@/lib/queries";
-import { Button } from "../ui/button";
-import Loading from "../global/loading";
-import {
+  AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -46,14 +16,46 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../ui/alert-dialog";
+} from '../ui/alert-dialog'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form'
+import { useToast } from '../ui/use-toast'
+
+import * as z from 'zod'
+import FileUpload from '../global/file-upload'
+import { Input } from '../ui/input'
+import { Switch } from '../ui/switch'
+import {
+  deleteAgency,
+  initUser,
+  saveActivityLogsNotification,
+  updateAgencyDetails,
+  upsertAgency,
+} from '@/lib/queries'
+import { Button } from '../ui/button'
+import Loading from '../global/loading'
 
 type Props = {
-  data?: Partial<Agency>;
-};
+  data?: Partial<Agency>
+}
 
 const FormSchema = z.object({
-  name: z.string().min(2, { message: "Agency name must be atleast 2 chars." }),
+  name: z.string().min(2, { message: 'Agency name must be atleast 2 chars.' }),
   companyEmail: z.string().min(1),
   companyPhone: z.string().min(1),
   whiteLabel: z.boolean(),
@@ -63,14 +65,14 @@ const FormSchema = z.object({
   state: z.string().min(1),
   country: z.string().min(1),
   agencyLogo: z.string().min(1),
-});
+})
 
 const AgencyDetails = ({ data }: Props) => {
-  const { toast } = useToast();
-  const router = useRouter();
-  const [deletingAgency, setDeletingAgency] = useState(false);
+  const { toast } = useToast()
+  const router = useRouter()
+  const [deletingAgency, setDeletingAgency] = useState(false)
   const form = useForm<z.infer<typeof FormSchema>>({
-    mode: "onChange",
+    mode: 'onChange',
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: data?.name,
@@ -84,19 +86,19 @@ const AgencyDetails = ({ data }: Props) => {
       country: data?.country,
       agencyLogo: data?.agencyLogo,
     },
-  });
-  const isLoading = form.formState.isSubmitting;
+  })
+  const isLoading = form.formState.isSubmitting
 
   useEffect(() => {
     if (data) {
-      form.reset(data);
+      form.reset(data)
     }
-  }, [data]);
+  }, [data])
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
-      let newUserData;
-      let custId;
+      let newUserData
+      let custId
       if (!data?.id) {
         const bodyData = {
           email: values.companyEmail,
@@ -118,22 +120,21 @@ const AgencyDetails = ({ data }: Props) => {
             postal_code: values.zipCode,
             state: values.zipCode,
           },
-        };
+        }
 
-        const customerResponse = await fetch("/api/stripe/create-customer", {
-          method: "POST",
+        const customerResponse = await fetch('/api/stripe/create-customer', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(bodyData),
-        });
-
+        })
         const customerData: { customerId: string } =
-          await customerResponse.json();
-        custId = customerData.customerId;
+          await customerResponse.json()
+        custId = customerData.customerId
       }
 
-      newUserData = await initUser({ role: "AGENCY_OWNER" });
+      newUserData = await initUser({ role: 'AGENCY_OWNER' })
       if (!data?.customerId && !custId) return
 
       const response = await upsertAgency({
@@ -151,49 +152,46 @@ const AgencyDetails = ({ data }: Props) => {
         createdAt: new Date(),
         updatedAt: new Date(),
         companyEmail: values.companyEmail,
-        connectAccountId: "",
+        connectAccountId: '',
         goal: 5,
-      });
+      })
       toast({
-        title: "Created Agency",
-      });
-      if (data?.id) {
-        return router.refresh();
-      }
+        title: 'Created Agency',
+      })
+      if (data?.id) return router.refresh()
       if (response) {
-        return router.refresh();
+        return router.refresh()
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
       toast({
-        variant: "destructive",
-        title: "Oppse!",
-        description: "could not create your agency",
-      });
+        variant: 'destructive',
+        title: 'Oppse!',
+        description: 'could not create your agency',
+      })
     }
-  };
-
+  }
   const handleDeleteAgency = async () => {
-    if (!data?.id) return;
-    setDeletingAgency(true);
+    if (!data?.id) return
+    setDeletingAgency(true)
     //WIP: discontinue the subscription
     try {
-      const response = await deleteAgency(data.id);
+      const response = await deleteAgency(data.id)
       toast({
-        title: "Deleted Agency",
-        description: "Deleted your agency and all subaccounts",
-      });
-      router.refresh();
+        title: 'Deleted Agency',
+        description: 'Deleted your agency and all subaccounts',
+      })
+      router.refresh()
     } catch (error) {
-      console.log(error);
+      console.log(error)
       toast({
-        variant: "destructive",
-        title: "Oppse!",
-        description: "could not delete your agency ",
-      });
+        variant: 'destructive',
+        title: 'Oppse!',
+        description: 'could not delete your agency ',
+      })
     }
-    setDeletingAgency(false);
-  };
+    setDeletingAgency(false)
+  }
 
   return (
     <AlertDialog>
@@ -477,4 +475,4 @@ const AgencyDetails = ({ data }: Props) => {
   )
 }
 
-export default AgencyDetails;
+export default AgencyDetails

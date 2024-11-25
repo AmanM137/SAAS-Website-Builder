@@ -1,5 +1,4 @@
 'use server'
-
 import Stripe from 'stripe'
 import { db } from '../db'
 import { stripe } from '.'
@@ -57,4 +56,4 @@ export const getConnectAccountProducts = async (stripeAccount: string) => {
     }
   )
   return products.data
-} 
+}

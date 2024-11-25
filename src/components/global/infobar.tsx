@@ -1,5 +1,4 @@
 'use client'
-
 import { NotificationWithUser } from '@/lib/types'
 import { UserButton } from '@clerk/nextjs'
 import React, { useState } from 'react'
@@ -37,7 +36,7 @@ const InfoBar = ({ notifications, subAccountId, className, role }: Props) => {
       if (notifications?.length !== 0) {
         setAllNotifications(
           notifications?.filter((item) => item.subAccountId === subAccountId) ??
-          []
+            []
         )
       }
     }
@@ -53,7 +52,7 @@ const InfoBar = ({ notifications, subAccountId, className, role }: Props) => {
         )}
       >
         <div className="flex items-center gap-2 ml-auto">
-          <UserButton />
+          <UserButton afterSignOutUrl="/" />
           <Sheet>
             <SheetTrigger>
               <div className="rounded-full w-9 h-9 bg-primary flex items-center justify-center text-white">

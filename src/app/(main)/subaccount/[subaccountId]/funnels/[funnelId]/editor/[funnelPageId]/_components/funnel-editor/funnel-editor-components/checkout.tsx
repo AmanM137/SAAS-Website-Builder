@@ -1,4 +1,5 @@
 'use client'
+
 import Loading from '@/components/global/loading'
 import { Badge } from '@/components/ui/badge'
 import { toast } from '@/components/ui/use-toast'
