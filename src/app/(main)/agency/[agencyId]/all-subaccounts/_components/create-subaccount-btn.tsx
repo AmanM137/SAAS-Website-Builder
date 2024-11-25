@@ -24,7 +24,7 @@ type Props = {
   className: string
 }
 
-const CreateSubaccountButton = ({ className, id, user }: Props) => {
+const CreateSubaccountButton = ({ className, user }: Props) => {
   const { setOpen } = useModal()
   const agencyDetails = user.Agency
 

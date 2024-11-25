@@ -3,13 +3,7 @@
 import clsx from 'clsx'
 import { ColumnDef } from '@tanstack/react-table'
 import {
-  Agency,
-  AgencySidebarOption,
-  Permissions,
-  Prisma,
   Role,
-  SubAccount,
-  User,
 } from '@prisma/client'
 import Image from 'next/image'
 
@@ -106,14 +100,19 @@ export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptio
           <div className="flex flex-col items-start">
             <div className="flex flex-col gap-2">
               {ownedAccounts?.length ? (
-                ownedAccounts.map((account) => (
-                  <Badge
-                    key={account.id}
-                    className="bg-slate-600 w-fit whitespace-nowrap"
-                  >
-                    Sub Account - {account.SubAccount.name}
-                  </Badge>
-                ))
+                ownedAccounts.map((account) => {
+                  if (typeof account === "object" && account !== null && "SubAccount" in account) {
+                    return (
+                      <Badge
+                        key={account.id}
+                        className="bg-slate-600 w-fit whitespace-nowrap"
+                      >
+                        Sub Account - {account.SubAccount.name}
+                      </Badge>
+                    );
+                  }
+                  return null;
+                })
               ) : (
                 <div className="text-muted-foreground">No Access Yet</div>
               )}
@@ -211,7 +210,7 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
             <AlertDialogTrigger asChild>
               <DropdownMenuItem
                 className="flex gap-2"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 <Trash size={15} /> Remove User
               </DropdownMenuItem>
