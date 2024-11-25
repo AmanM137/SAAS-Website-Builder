@@ -1,4 +1,4 @@
-# Plura - Agency Management Platform
+# Plura - SAAS Website Builder
 
 Plura is a comprehensive SaaS platform designed for agencies to manage their clients, subaccounts, and digital marketing operations efficiently.
 
